@@ -70,7 +70,7 @@ export const Main: FC = () => {
   });
 
   // 📟 Listen for broadcast events
-  // const setPurposeEvents = useEventListener(yourContractRead, 'SetPurpose', 1);
+  const setPurposeEvents = useEventListener(yourContractRead, 'SetPurpose', 1);
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
