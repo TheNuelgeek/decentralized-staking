@@ -13,19 +13,19 @@ contract Staker {
 
   // TODO: Collect funds in a payable `stake()` function and track individual `balances` with a mapping:
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
-
+  error DeadlineNotReached();
   uint256 public constant threshold = 1 ether;
 
   uint256 public deadline = block.timestamp + 30 seconds;
 
   mapping(address => uint256) public balances;
 
-  event _stake(address _staker, uint256 _amount);
+  event Stake(address indexed _staker, uint256 indexed _amount);
 
   function stake(address staker, uint256 amount) public payable returns (bool success) {
     balances[staker] += amount;
     success = true;
-    emit _stake(staker, amount);
+    emit Stake(staker, amount);
     console.log('balance', balances[staker]);
   }
 
@@ -33,12 +33,31 @@ contract Staker {
   //  It should call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
 
   function execute() public {
-    if (balances[address(this)] > threshold) {
+    assert(deadline > 30 seconds);
+    if (balances[address(this)] >= threshold) {
       exampleExternalContract.complete{value: address(this).balance}();
     }
 
     if (address(this).balance < threshold) {
       bool openForWithdraw = true;
+      withdraw();
+    }
+  }
+
+  function withdraw() public {
+    uint256 amount = balances[msg.sender];
+    (bool os, ) = payable(msg.sender).call{value: amount}('');
+    require(os);
+  }
+
+  function timeLeft() public view returns (uint256 _deadline) {
+    if (block.timestamp >= deadline) {
+      return 0;
+    }
+
+    if (block.timestamp < deadline) {
+      _deadline = deadline;
+      return _deadline;
     }
   }
 
