@@ -32,14 +32,15 @@ contract Staker {
   // TODO: After some `deadline` allow anyone to call an `execute()` function
   //  It should call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
 
-  function execute() public {
-    assert(deadline > 30 seconds);
+  function execute() public returns (bool openForWithdraw) {
+    // assert(deadline > 30 seconds);
+    timeLeft();
     if (balances[address(this)] >= threshold) {
       exampleExternalContract.complete{value: address(this).balance}();
     }
 
     if (address(this).balance < threshold) {
-      bool openForWithdraw = true;
+      openForWithdraw = true;
       withdraw();
     }
   }
@@ -51,15 +52,18 @@ contract Staker {
   }
 
   function timeLeft() public view returns (uint256 _deadline) {
-    if (block.timestamp >= deadline) {
+    _deadline = block.timestamp;
+    if (_deadline >= deadline) {
       return 0;
+    } else if (block.timestamp < deadline) {
+      _deadline++;
     }
-
-    if (block.timestamp < deadline) {
-      _deadline = deadline;
-      return _deadline;
-    }
+    return _deadline;
   }
+
+  // receive()external payable{
+  //   stake(msg.sender, msg.value);
+  // }
 
   // TODO: if the `threshold` was not met, allow everyone to call a `withdraw()` function
 
