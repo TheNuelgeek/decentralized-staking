@@ -13,7 +13,7 @@ contract Staker {
 
   // TODO: Collect funds in a payable `stake()` function and track individual `balances` with a mapping:
   //  ( make sure to add a `Stake(address,uint256)` event and emit it for the frontend <List/> display )
-  error DeadlineNotReached();
+  bool OpenForWithdrawal;
   uint256 public constant threshold = 1 ether;
 
   uint256 public deadline = block.timestamp + 30 seconds;
@@ -33,32 +33,36 @@ contract Staker {
   //  It should call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
 
   function execute() public returns (bool openForWithdraw) {
-    // assert(deadline > 30 seconds);
-    timeLeft();
-    if (balances[address(this)] >= threshold) {
-      exampleExternalContract.complete{value: address(this).balance}();
-    }
-
-    if (address(this).balance < threshold) {
-      openForWithdraw = true;
-      withdraw();
+    uint256 _timeleft = timeLeft();
+    if (_timeleft == 0) {
+      if (address(this).balance >= threshold) {
+        exampleExternalContract.complete{value: address(this).balance}();
+      } else if (address(this).balance < threshold) {
+        openForWithdraw = true;
+      }
+    } else {
+      //timeLeft();
     }
   }
 
   function withdraw() public {
+    require(OpenForWithdrawal == true, '');
     uint256 amount = balances[msg.sender];
     (bool os, ) = payable(msg.sender).call{value: amount}('');
     require(os);
   }
 
+  //2994.6710
   function timeLeft() public view returns (uint256 _deadline) {
     _deadline = block.timestamp;
-    if (_deadline >= deadline) {
+    uint256 newDeadline = deadline - _deadline;
+    if (newDeadline == deadline) {
       return 0;
-    } else if (block.timestamp < deadline) {
+    } else if (_deadline < deadline) {
       _deadline++;
     }
-    return _deadline;
+
+    return newDeadline;
   }
 
   // receive()external payable{
