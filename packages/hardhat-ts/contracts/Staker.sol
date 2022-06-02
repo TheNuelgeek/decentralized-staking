@@ -33,20 +33,21 @@ contract Staker {
   //  It should call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
 
   function execute() public returns (bool openForWithdraw) {
-    uint256 _timeleft = timeLeft();
-    if (_timeleft == 0) {
-      if (address(this).balance >= threshold) {
-        exampleExternalContract.complete{value: address(this).balance}();
-      } else if (address(this).balance < threshold) {
-        openForWithdraw = true;
-      }
-    } else {
-      //timeLeft();
+    //uint256 _timeleft = timeLeft();
+    // if (_timeleft == 0) {
+
+    // } else {
+    //   // timeLeft();1000000000000000000
+    // }
+    if (address(this).balance >= threshold) {
+      exampleExternalContract.complete{value: address(this).balance}();
+    } else if (address(this).balance < threshold) {
+      openForWithdraw = true;
     }
   }
 
   function withdraw() public {
-    require(OpenForWithdrawal == true, '');
+    // assert(OpenForWithdrawal == true);
     uint256 amount = balances[msg.sender];
     (bool os, ) = payable(msg.sender).call{value: amount}('');
     require(os);
