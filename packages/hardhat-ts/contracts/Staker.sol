@@ -20,6 +20,8 @@ contract Staker {
 
   mapping(address => uint256) public balances;
 
+  uint256 public _timeleft = timeLeft();
+
   event Stake(address indexed _staker, uint256 indexed _amount);
 
   function stake(address staker, uint256 amount) public payable returns (bool success) {
@@ -32,22 +34,22 @@ contract Staker {
   // TODO: After some `deadline` allow anyone to call an `execute()` function
   //  It should call `exampleExternalContract.complete{value: address(this).balance}()` to send all the value
 
-  function execute() public returns (bool openForWithdraw) {
-    //uint256 _timeleft = timeLeft();
-    // if (_timeleft == 0) {
-
-    // } else {
-    //   // timeLeft();1000000000000000000
-    // }
+  function execute() public {
+    // uint256 _timeleft = timeLeft();
     if (address(this).balance >= threshold) {
       exampleExternalContract.complete{value: address(this).balance}();
     } else if (address(this).balance < threshold) {
-      openForWithdraw = true;
+      OpenForWithdrawal = true;
     }
+
+    // if (_timeleft == 0) {
+    // } else {
+    //   // timeLeft();1000000000000000000
+    // }address(this).balance >= threshold)
   }
 
   function withdraw() public {
-    // assert(OpenForWithdrawal == true);
+    assert(OpenForWithdrawal == true);
     uint256 amount = balances[msg.sender];
     (bool os, ) = payable(msg.sender).call{value: amount}('');
     require(os);
@@ -56,13 +58,14 @@ contract Staker {
   //2994.6710
   function timeLeft() public view returns (uint256 _deadline) {
     _deadline = block.timestamp;
+    //deadline = block.timestamp + 30 seconds
     uint256 newDeadline = deadline - _deadline;
-    if (newDeadline == deadline) {
-      return 0;
-    } else if (_deadline < deadline) {
-      _deadline++;
+    for (uint256 i = 30; i > 0; i--) {
+      newDeadline - 1;
+      if (i == 0) {
+        break;
+      }
     }
-
     return newDeadline;
   }
 
