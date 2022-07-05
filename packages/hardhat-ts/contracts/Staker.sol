@@ -35,10 +35,10 @@ contract Staker {
     _;
   }
 
-  function stake(address staker, uint256 amount) public payable returns (bool success) {
-    balances[staker] += amount;
+  function stake(uint256 amount) public payable returns (bool success) {
+    balances[msg.sender] += amount;
     success = true;
-    emit Stake(staker, amount);
+    emit Stake(msg.sender, amount);
     OpenForWithdrawal = false;
     called = true;
   }
@@ -72,7 +72,7 @@ contract Staker {
   }
 
   receive() external payable {
-    stake(msg.sender, msg.value);
+    stake(msg.value);
   }
 
   // TODO: if the `threshold` was not met, allow everyone to call a `withdraw()` function
