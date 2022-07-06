@@ -4,7 +4,7 @@
 // This adds support for typescript paths mappings
 import 'tsconfig-paths/register';
 
-import { Signer, utils } from 'ethers';
+import { providers, Signer, utils } from 'ethers';
 import '@typechain/hardhat';
 import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-ethers';
@@ -23,6 +23,7 @@ import { Provider, TransactionRequest } from '@ethersproject/providers';
 import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
 import { HardhatRuntimeEnvironmentExtended, TEthers } from 'helpers/types/hardhat-type-extensions';
+import { env } from 'process';
 
 declare module 'hardhat/types/runtime' {
   // This is an example of an extension to the Hardhat Runtime Environment.
@@ -74,7 +75,7 @@ const config: HardhatUserConfig = {
       // },
     },
     rinkeby: {
-      url: 'https://rinkeby.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad', // <---- YOUR INFURA ID! (or it won't work)
+      url: 'https://rinkeby.infura.io/v3/77e2c51480c04f238f44e02af0f21730', // <---- YOUR INFURA ID! (or it won't work)
       accounts: {
         mnemonic: getMnemonic(),
       },
@@ -159,7 +160,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     // Add your api key here
-    apiKey: 'DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW',
+    apiKey: process.env.api,
   },
 };
 export default config;
