@@ -7,7 +7,7 @@ import './ExampleExternalContract.sol';
 contract Staker {
   ExampleExternalContract public exampleExternalContract;
 
-  constructor(address exampleExternalContractAddress) public {
+  constructor(address exampleExternalContractAddress) {
     exampleExternalContract = ExampleExternalContract(exampleExternalContractAddress);
   }
 
