@@ -146,7 +146,9 @@ export const Staker: FC<StakerProps> = (props) => {
           type={balanceStaked ? 'primary' : 'default'}
           onClick={() => {
             if (tx) {
-              tx(stakeContractWrite.stake(BigNumber.from('1000000000000000') ));
+              tx(stakeContractWrite.stake(BigNumber.from('500000000000000000') ));
+              //1000000000000000
+              //
             }
           }}>
           🥩 Stake 0.5 ether!
