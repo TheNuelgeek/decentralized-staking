@@ -51,7 +51,7 @@ describe("🚩 Challenge 1: 🥩 Decentralized Staking App", function () {
         console.log('\t'," ⚖️ Starting balance: ",startingBalance.toNumber())
 
         console.log('\t'," 🔨 Staking...")
-        const stakeResult = await stakerContract.stake(ethers.utils.parseEther("0.001"));
+        const stakeResult = await stakerContract.stake(ethers.utils.parseEther("0.5"));
         console.log('\t'," 🏷  stakeResult: ",stakeResult.hash)
 
         console.log('\t'," ⏳ Waiting for confirmation...")
@@ -60,7 +60,7 @@ describe("🚩 Challenge 1: 🥩 Decentralized Staking App", function () {
 
         const newBalance = await stakerContract.balances(owner.address)
         console.log('\t'," 🔎 New balance: ", ethers.utils.formatEther(newBalance))
-        expect(newBalance).to.equal(startingBalance.add(ethers.utils.parseEther("0.001")));
+        expect(newBalance).to.equal(startingBalance.add(ethers.utils.parseEther("0.5")));
 
       });
 
@@ -111,7 +111,7 @@ describe("🚩 Challenge 1: 🥩 Decentralized Staking App", function () {
           stakerContract = await Staker.deploy(exampleExternalContract.address);
 
           console.log('\t'," 🔨 Staking...")
-          const stakeResult = await stakerContract.connect(secondAccount).stake(ethers.utils.parseEther("0.001"));
+          const stakeResult = await stakerContract.connect(secondAccount).stake(ethers.utils.parseEther("0.5"));
           console.log('\t'," 🏷  stakeResult: ",stakeResult.hash)
 
           console.log('\t'," ⏳ Waiting for confirmation...")

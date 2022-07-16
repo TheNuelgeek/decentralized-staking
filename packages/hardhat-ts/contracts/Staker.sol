@@ -54,13 +54,13 @@ contract Staker {
       OpenForWithdrawal = true;
     }
     called = false;
-    //1000000000000000000
+    //10000000000000000000
+    //500000000000000000
   }
 
   function withdraw() public OpenForWithdrawal_ {
     uint256 amount = balances[msg.sender];
     (bool os, ) = payable(msg.sender).call{value: amount}('');
-    require(os);
   }
 
   function timeLeft() public view returns (uint256) {
